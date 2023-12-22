@@ -1,0 +1,45 @@
+<script type="module">
+  import { download } from "./dapp/download.js"
+  import knownFrontends from "./known-frontends.js"
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register("/dapp-service-worker.js", {
+          type: "module",
+          updateViaCache: "all",
+        })
+
+        await navigator.serviceWorker.ready
+
+        //k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8
+        // ens.eth's IPNS key
+        const location = "ipns://k51qzi5uqu5dipklqpo2uq7advlajxx5wxob0mwyqbxb5zu4htblc4bjipy834"
+        // const location = "ens://ens.eth"
+        // const location = "ipns://app.aave.com"
+        const ignorePaths = knownFrontends.find(knownFrontend => knownFrontend.location === location)?.ignorePaths
+
+        // dummy
+        // const files = await download("bafybeihvvbgvjmujf7g3dfw54imeombrwwruvejk5nith3ewr56ut3x27i")
+
+        // liquity
+        // const files = await download("bafybeih5tsrq5v67b4oz7ruhhohyvnugok4efs6kk64xmlwuxjwx6ch2g4")
+
+        // uniswap
+        // const files = await download("bafybeieu3j7cdq5nz4r6z7qnoxcyqq7bk4wjiyxmelpzprkvoaedcb4uze")
+
+        // aave
+        // const dapp = await download("bafybeiadwlb54rpyja473topzeonkrfg7x3zvk7dbdmz5oycbqau4ybxja", { ignorePaths })
+        const dapp = await download(location, { ignorePaths })
+
+        console.log("dapp", dapp)
+
+        registration.active.postMessage({ event: "STORE_DAPP_REQUESTED", payload: dapp })
+      }
+      catch (error) {
+        console.log('Service worker registration failed, error:', error)
+      }
+    }
+  })
+</script>
+<h1>Installing dapp... please wait.</h1>

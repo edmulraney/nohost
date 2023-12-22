@@ -1,0 +1,10 @@
+{
+  "name": "nohost",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {},
+  "type": "module",
+  "keywords": [],
+  "author": "Edward Mulraney",
+  "license": "GPL-3.0"
+}
