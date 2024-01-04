@@ -1,4 +1,4 @@
-import { getHeliaFs } from '../utils/get-helia-fs.js'
+import { getHeliaFs } from '../utils/helia.js'
 import { CID } from 'https://esm.sh/multiformats@latest'
 import * as mimeTypes from 'https://cdn.jsdelivr.net/npm/mime-types@2.1.35/+esm'
 
@@ -45,7 +45,7 @@ const getFiles = async (cidString, fs, cwd = "", options = {}) => {
 
 
 const unpack = async (cid, options) => {
-  console.log(id, "unpacking...")
+  console.log(id, "unpacking...", cid)
   const fs = await getHeliaFs()
   return getFiles(cid, fs, undefined, options)
 }

@@ -6,7 +6,6 @@ const id = "__dapp-service-worker__"
 self.addEventListener("message", async (event) => {
   if (event.data.event !== "STORE_DAPP_REQUESTED") return;
 
-  console.log(id, "message event", event)
   const { location, files, version } = event.data.payload
 
   event.waitUntil((async () => {
