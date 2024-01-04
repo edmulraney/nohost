@@ -1,6 +1,6 @@
-import { createEnsPublicClient } from "https://esm.sh/@ensdomains/ensjs"
-import { http } from 'https://esm.sh/viem'
-import { mainnet } from 'https://esm.sh/viem/chains'
+import { createEnsPublicClient } from "https://esm.sh/@ensdomains/ensjs@3.0.0"
+import { http } from 'https://esm.sh/viem@1.21.4'
+import { mainnet } from 'https://esm.sh/viem@1.21.4/chains'
 import { getContentHashRecord as _getContentHashRecord } from 'https://esm.sh/@ensdomains/ensjs/public'
 
 let client = undefined

@@ -1,0 +1,113 @@
+<script type="module">
+  import { unpack } from "./unpack.js"
+  import { getDappId } from "../utils/url.js"
+
+  const isValidGithubUrl = (url) => url !== undefined && url.startsWith("https://github.com/")
+
+  const getType = (url) => {
+    if (url.endsWith(".zip")) {
+      return "zip"
+    }
+    else if (url.endsWith(".tar.gz")) {
+      return "tar.gz"
+    }
+    return undefined
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const queryParams = new URLSearchParams(window.location.search)
+    const target = queryParams.get("target")
+    const isValidTarget = target !== null && isValidGithubUrl(target)
+    const dappId = getDappId(window.location.hostname)
+    const options = JSON.parse(queryParams.get("options"))
+
+    if (!isValidTarget) {
+      document.getElementById("error").style.display = "block"
+      document.getElementById("error").innerText = "Invalid URL: No Github location specificed in target query parameter."
+      return
+    }
+
+    if (dappId === undefined) {
+      document.getElementById("error").style.display = "block"
+      document.getElementById("error").innerText = "Invalid URL: No subdomain specified in URL."
+      return
+    }
+
+    document.getElementById("wizard").style.display = "block"
+
+    const dappName = document.getElementById("dapp-id")
+    dappName.innerText = dappId
+
+    const step1 = document.getElementById("wizard-step-1")
+    const step2 = document.getElementById("wizard-step-2")
+    const step3 = document.getElementById("wizard-step-3")
+    const link = document.getElementById("download-link")
+    const button = document.getElementById("download-button")
+
+    link.href = target
+
+    button.addEventListener("click", (event) => {
+      link.click()
+      step1.style.display = "none"
+      step2.style.display = "block"
+    })
+
+    document.getElementById('file').addEventListener('change', async (event) => {
+      const asset = event.target.files[0]
+      const type = getType(target)
+      const dapp = await unpack(asset, type, options)
+
+      console.log("files", dapp.files)
+      step2.style.display = "none"
+      step3.style.display = "block"
+      const registration = await navigator.serviceWorker.register("/dapp-service-worker.js", {
+        type: "module",
+        updateViaCache: "all",
+      })
+
+      navigator.serviceWorker.addEventListener('message', e => {
+        if (e.data.event === "STORE_DAPP_SUCCEEDED") {
+          console.log("App installed successfully.")
+          setTimeout(() => {
+            window.location.href = window.location.origin
+          }, 3000)
+        }
+      })
+      registration.active.postMessage({ event: "STORE_DAPP_REQUESTED", payload: dapp })
+    })
+  })
+
+  if ('serviceWorker' in navigator) {
+    const registration = await navigator.serviceWorker.register("/dapp-service-worker.js", {
+      type: "module",
+      updateViaCache: "all",
+    })
+  }
+</script>
+
+<body style="height: 100%; margin: 0">
+  <div style="display: flex; justify-content: center; align-items: center; height: 100%; flex-direction: column;">
+    <h1>nohost</h1>
+    <h2 id="dapp-id"></h2>
+    <div id="error" style="display: none"></div>
+    <div id="wizard" style="display: none">
+      <div id="wizard-step-1">
+        <div>To install this dapp, press the download button below and follow the next steps.</div>
+        <div id="download" style="margin-top: 30px; text-align: center">
+          <button id="download-button">
+            <a id="download-link" download>Download</a>
+          </button>
+        </div>
+      </div>
+      <div id="wizard-step-2" style="display: none">
+        <div>Once the file has finished downloading to your device, please upload
+          it below.</div>
+        <div id="upload" style="margin-top: 30px; text-align: center">
+          <input type="file" id="file">
+        </div>
+      </div>
+      <div id="wizard-step-3" style="display: none">
+        <div>You have successfully installed this dapp. You're now being redirected to it...</div>
+      </div>
+    </div>
+</body>

@@ -2,7 +2,9 @@
   "name": "nohost",
   "version": "1.0.0",
   "description": "",
-  "scripts": {},
+  "scripts": {
+    "start": "npx http-server -p 9099"
+  },
   "type": "module",
   "keywords": [],
   "author": "Edward Mulraney",
