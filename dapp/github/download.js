@@ -6,7 +6,7 @@ const assetNames = ["app.tar.gz", "app.zip"]
 const download = async (path, options) => {
   const [owner, repo] = path.split("/")
   const releases = await window.fetch(`https://api.github.com/repos/${owner}/${repo}/releases`).then(res => res.json())
-  const latestRelease = options?.github?.assetNameMatch ? releases.find(release => release.name.includes(options.github.assetNameMatch)) : releases[0]
+  const latestRelease = options?.github?.assetName ? releases.find(release => release.name.includes(options.github.assetName)) : releases[0]
   if (options?.github?.ipfsScrape) {
     const cid = extractCidV1(latestRelease.body)
     if (cid) return ipfsDownload(cid, options)
