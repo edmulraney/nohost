@@ -32,9 +32,15 @@ const extractIpnsCidV1 = (name) => {
 
 const resolveDnsLink = async (name) => {
   const ipnsResolver = await getIpnsResolver()
-  const txt = await ipnsResolver.resolve("_dnslink." + name, "TXT")
-  const cid = txt[0][0].replace("dnslink=/ipfs/", "").replace("/", "")
-  return cid
+  const txts = await ipnsResolver.resolve("_dnslink." + name, "TXT")
+  for (const txt of txts) {
+    const dnslink = txt[0].replace("dnslink=/ipfs/", "").replace("/", "")
+    const cidv0 = extractCidV0(dnslink)
+    const cidv1 = extractCidV1(dnslink)
+    const isCid = cidv0 || cidv1
+    if (isCid) return dnslink
+  }
+  return undefined
 }
 
 const resolveIpfsCid = async (key) => {
@@ -62,6 +68,7 @@ export {
   resolveIpnsCid
 }
 
+// TODO: once helia/ipns is working in browser, switch to this:
 // import { getHelia } from "./get-helia.js"
 // // import { ipns } from "@helia/ipns"
 // import { ipns } from "../node_modules/@helia/ipns/dist/index.min.js"
@@ -92,3 +99,5 @@ export {
 //     resolvers
 //   })
 // }
+//
+// ...
