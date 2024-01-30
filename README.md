@@ -7,5 +7,5 @@ Background:
 - [The State of Dapps on IPFS: Trust vs. Verification](https://blog.ipfs.tech/dapps-ipfs/) by Daniel Norman
 
 Join in:
-- [IPFS dapps working group Telegram](https://t.me/ipfsdapps/1)
+- [IPFS dapps working group weekly call](https://lu.ma/ipfs-dapps)
 - [The DeFi Collective Discord](https://discord.com/channels/1107676235808645232/1182039542572785735)
