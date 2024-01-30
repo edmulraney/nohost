@@ -7,6 +7,4 @@ const getDappId = (hostname) => {
   return undefined
 }
 
-export {
-  getDappId,
-}
+export { getDappId }

@@ -6,7 +6,20 @@ const unpackers = [
   ["zip", unzip],
 ]
 
-const getUnpacker = (url) => unpackers.find(unpacker => url.endsWith(unpacker[0]))[1]
+const getArchiveType = (url) => {
+  if (url.endsWith(".zip")) {
+    return "zip"
+  }
+
+  if (url.endsWith(".tar.gz")) {
+    return "tar.gz"
+  }
+
+  return undefined
+}
+
+const getUnpacker = (url) =>
+  unpackers.find((unpacker) => url.endsWith(unpacker[0]))[1]
 
 const unpack = async (asset, type, options) => {
   const unpacker = getUnpacker(type)
@@ -15,10 +28,8 @@ const unpack = async (asset, type, options) => {
 
   return {
     files,
-    version: "TODO" // TODO
+    version: "TODO", // TODO: version github installations
   }
 }
 
-export {
-  unpack,
-}
+export { unpack, getArchiveType }

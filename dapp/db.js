@@ -1,6 +1,6 @@
 const dbName = "dappDB"
 const versionStoreName = "currentVersionStore"
-const fileStoreName = 'filesStore'
+const fileStoreName = "filesStore"
 
 const openDB = async () => {
   return new Promise((resolve, reject) => {
@@ -9,7 +9,7 @@ const openDB = async () => {
     request.onupgradeneeded = (event) => {
       const db = event.target.result
       db.createObjectStore(versionStoreName, { keyPath: "id" })
-      db.createObjectStore(fileStoreName, { keyPath: 'version' })
+      db.createObjectStore(fileStoreName, { keyPath: "version" })
     }
 
     request.onsuccess = (event) => resolve(event.target.result)
@@ -20,7 +20,7 @@ const openDB = async () => {
 const saveFiles = async (files, version) => {
   const db = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction([fileStoreName], 'readwrite')
+    const transaction = db.transaction([fileStoreName], "readwrite")
     const store = transaction.objectStore(fileStoreName)
     const request = store.put({ files, version })
 
@@ -40,7 +40,6 @@ const getFiles = async (version) => {
     request.onerror = (event) => reject(event.target.error)
   })
 }
-
 
 const setVersion = async (version) => {
   const db = await openDB()
@@ -66,9 +65,4 @@ const getVersion = async () => {
   })
 }
 
-export {
-  setVersion,
-  getVersion,
-  saveFiles,
-  getFiles,
-}
+export { setVersion, getVersion, saveFiles, getFiles }

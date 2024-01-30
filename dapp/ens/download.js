@@ -1,18 +1,17 @@
-import { getSourceCodeRecord, getContentHashRecord } from "../utils/ens.js"
+import { getSourceCodeLocation } from "../utils/ens.js"
 import { download as downloadInner } from "../download.js"
 
 const download = async (ens, options) => {
-  const fullEnsName = ens.endsWith(".eth") ? ens : ens + ".eth"
-  const contenthash = await getContentHashRecord(fullEnsName)
-  if (contenthash) return downloadInner(contenthash.protocolType + "://" + contenthash.decoded, options)
+  const fullEnsName = ens.endsWith(".eth") ? ens : `${ens}.eth`
+  const { protocol, path } = await getSourceCodeLocation(fullEnsName)
 
+  if (!sourceCodeLocation) {
+    throw new Error(
+      `No source code location records found for ENS: ${fullEnsName}`,
+    )
+  }
 
-  const sourceCode = await getSourceCodeRecord(fullEnsName)
-  if (sourceCode) return downloadInner(sourceCode.protocolType + "://" + sourceCode.path, options)
-
-  throw new Error("ENS contenthash not found")
+  return downloadInner(`${protocol}://${path}`, options)
 }
 
-export {
-  download,
-}
+export { download }

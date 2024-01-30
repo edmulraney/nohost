@@ -1,0 +1,9 @@
+{
+	"javascript": {
+		"formatter": {
+			"semicolons": "asNeeded",
+			"indentStyle": "space",
+			"indentWidth": 2
+		}
+	}
+}

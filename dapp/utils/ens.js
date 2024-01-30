@@ -1,22 +1,24 @@
 import { createEnsPublicClient } from "https://esm.sh/@ensdomains/ensjs@3.0.0"
-import { http } from 'https://esm.sh/viem@1.21.4'
-import { mainnet } from 'https://esm.sh/viem@1.21.4/chains'
-import { getContentHashRecord as _getContentHashRecord } from 'https://esm.sh/@ensdomains/ensjs@3.0.0/public'
+import { http } from "https://esm.sh/viem@1.21.4"
+import { mainnet } from "https://esm.sh/viem@1.21.4/chains"
+import { getContentHashRecord as _getContentHashRecord } from "https://esm.sh/@ensdomains/ensjs@3.0.0/public"
 
 let client = undefined
 
 const getClient = async () => {
   if (client) return client
 
-  return client = createEnsPublicClient({
+  client = createEnsPublicClient({
     chain: mainnet,
     transport: http(),
   })
+
+  return client
 }
 
 const getSourceCodeRecord = async (name) => {
   const client = await getClient()
-  const result = await getTextRecord(client, { name, key: 'sourcecode' })
+  const result = await getTextRecord(client, { name, key: "sourcecode" })
 
   if (!result) return undefined
 
@@ -28,18 +30,21 @@ const getSourceCodeRecord = async (name) => {
   }
 }
 
-
 const getContentHashRecord = async (name) => {
   const client = await getClient()
-  console.log("getting content hash record", name)
-  const result = await _getContentHashRecord(client, { name })
-  console.log("got result", result)
-  console.log("got contenhash", result.decoded)
-  return result;
+  return _getContentHashRecord(client, { name })
 }
 
+const getSourceCodeLocation = async (name) => {
+  const contenthash = await getContentHashRecord(name)
+  if (contenthash)
+    return { protocol: contenthash.protocolType, path: contenthash.decoded }
 
-export {
-  getContentHashRecord,
-  getSourceCodeRecord,
+  const sourceCode = await getSourceCodeRecord(name)
+  if (sourceCode)
+    return { protocol: sourceCode.protocol, path: sourceCode.path }
+
+  return undefined
 }
+
+export { getSourceCodeLocation }
