@@ -1,18 +1,8 @@
 <script type="module">
-  import { unpack } from "./unpack.js"
+  import { unpack, getArchiveType } from "./unpack.js"
   import { getDappId } from "../utils/url.js"
 
   const isValidGithubUrl = (url) => url !== undefined && url.startsWith("https://github.com/")
-
-  const getType = (url) => {
-    if (url.endsWith(".zip")) {
-      return "zip"
-    }
-    else if (url.endsWith(".tar.gz")) {
-      return "tar.gz"
-    }
-    return undefined
-  }
 
   document.addEventListener("DOMContentLoaded", () => {
     const queryParams = new URLSearchParams(window.location.search)
@@ -54,10 +44,9 @@
 
     document.getElementById('file').addEventListener('change', async (event) => {
       const asset = event.target.files[0]
-      const type = getType(target)
+      const type = getArchiveType(target)
       const dapp = await unpack(asset, type, options)
 
-      console.log("files", dapp.files)
       step2.style.display = "none"
       step3.style.display = "block"
       const registration = await navigator.serviceWorker.register("/dapp-service-worker.js", {
@@ -73,6 +62,7 @@
           }, 3000)
         }
       })
+
       registration.active.postMessage({ event: "STORE_DAPP_REQUESTED", payload: dapp })
     })
   })
@@ -100,8 +90,7 @@
         </div>
       </div>
       <div id="wizard-step-2" style="display: none">
-        <div>Once the file has finished downloading to your device, please upload
-          it below.</div>
+        <div>Once the file has finished downloading to your device, please upload it below.</div>
         <div id="upload" style="margin-top: 30px; text-align: center">
           <input type="file" id="file">
         </div>
