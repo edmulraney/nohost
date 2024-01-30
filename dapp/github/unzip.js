@@ -1,5 +1,9 @@
-import { HttpReader, ZipReader, BlobWriter } from "https://esm.sh/@zip.js/zip.js@2.7.32"
-import * as mimeTypes from 'https://cdn.jsdelivr.net/npm/mime-types@2.1.35/+esm'
+import {
+  HttpReader,
+  ZipReader,
+  BlobWriter,
+} from "https://esm.sh/@zip.js/zip.js@2.7.32"
+import * as mimeTypes from "https://cdn.jsdelivr.net/npm/mime-types@2.1.35/+esm"
 
 // TODO implement this...
 const unzip = async (url, options) => {
@@ -9,11 +13,10 @@ const unzip = async (url, options) => {
 
   for (const entry of entries) {
     if (entry.directory) continue
-    console.log(entry)
     files.push({
       path: entry.filename,
       mime: mimeTypes.lookup(entry.filename),
-      content: await entry.getData(new BlobWriter())
+      content: await entry.getData(new BlobWriter()),
     })
   }
 
@@ -21,6 +24,4 @@ const unzip = async (url, options) => {
   return files
 }
 
-export {
-  unzip,
-}
+export { unzip }

@@ -6,45 +6,45 @@ import { getContentHashRecord as _getContentHashRecord } from "https://esm.sh/@e
 let client = undefined
 
 const getClient = async () => {
-	if (client) return client
+  if (client) return client
 
-	client = createEnsPublicClient({
-		chain: mainnet,
-		transport: http(),
-	})
+  client = createEnsPublicClient({
+    chain: mainnet,
+    transport: http(),
+  })
 
-	return client
+  return client
 }
 
 const getSourceCodeRecord = async (name) => {
-	const client = await getClient()
-	const result = await getTextRecord(client, { name, key: "sourcecode" })
+  const client = await getClient()
+  const result = await getTextRecord(client, { name, key: "sourcecode" })
 
-	if (!result) return undefined
+  if (!result) return undefined
 
-	const [protocolType, path] = result.split("://")
+  const [protocolType, path] = result.split("://")
 
-	return {
-		protocolType,
-		path,
-	}
+  return {
+    protocolType,
+    path,
+  }
 }
 
 const getContentHashRecord = async (name) => {
-	const client = await getClient()
-	return _getContentHashRecord(client, { name })
+  const client = await getClient()
+  return _getContentHashRecord(client, { name })
 }
 
 const getSourceCodeLocation = async (name) => {
-	const contenthash = await getContentHashRecord(name)
-	if (contenthash)
-		return { protocol: contenthash.protocolType, path: contenthash.decoded }
+  const contenthash = await getContentHashRecord(name)
+  if (contenthash)
+    return { protocol: contenthash.protocolType, path: contenthash.decoded }
 
-	const sourceCode = await getSourceCodeRecord(name)
-	if (sourceCode)
-		return { protocol: sourceCode.protocol, path: sourceCode.path }
+  const sourceCode = await getSourceCodeRecord(name)
+  if (sourceCode)
+    return { protocol: sourceCode.protocol, path: sourceCode.path }
 
-	return undefined
+  return undefined
 }
 
 export { getSourceCodeLocation }

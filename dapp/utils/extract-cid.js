@@ -11,7 +11,4 @@ const extractCidV1 = (input) => {
   return match ? match[0] : undefined
 }
 
-export {
-  extractCidV0,
-  extractCidV1,
-}
+export { extractCidV0, extractCidV1 }
