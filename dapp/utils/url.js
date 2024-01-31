@@ -7,4 +7,11 @@ const getDappId = (hostname) => {
   return undefined
 }
 
-export { getDappId }
+const createDappIdFromLocation = (location) => {
+  return location
+    .split("://")[1]
+    ?.toLowerCase()
+    ?.replace(/[^a-z]+/g, "-")
+}
+
+export { getDappId, createDappIdFromLocation }

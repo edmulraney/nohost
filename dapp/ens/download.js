@@ -5,7 +5,7 @@ const download = async (ens, options) => {
   const fullEnsName = ens.endsWith(".eth") ? ens : `${ens}.eth`
   const { protocol, path } = await getSourceCodeLocation(fullEnsName)
 
-  if (!sourceCodeLocation) {
+  if (!protocol || !path) {
     throw new Error(
       `No source code location records found for ENS: ${fullEnsName}`,
     )
