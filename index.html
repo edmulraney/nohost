@@ -5,55 +5,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>No host</title>
-  <script type="module">
-    import { getDappId } from "./dapp/utils/url.js"
-    import { download } from "./dapp/download.js"
-    import knownDapps from "./known-dapps.js"
-
-    const handleSubdomain = async () => {
-      const dappId = getDappId(window.location.hostname)
-      if (dappId === undefined) {
-        console.log("Not on a subdomain")
-        return
-      }
-
-      // Register dapp service worker on this subdomain
-      const registration = await navigator.serviceWorker.register("/dapp-service-worker.js", {
-        type: "module",
-        updateViaCache: "all",
-      })
-
-      await navigator.serviceWorker.ready
-      const knownDapp = knownDapps.find(knownDapp => knownDapp.id === dappId)
-      console.log({ knownDapp })
-      const dapp = knownDapp ? await download(knownDapp.location, knownDapp.options) : await download("ens://" + dappId)
-      console.log("dapp", dapp)
-      navigator.serviceWorker.addEventListener('message', e => {
-        if (e.data.event === "STORE_DAPP_SUCCEEDED") {
-          console.log("App installed successfully.")
-          setTimeout(() => {
-            window.location.href = window.location.origin
-          }, 3000)
-        }
-      })
-      registration.active.postMessage({ event: "STORE_DAPP_REQUESTED", payload: dapp })
-      console.log("dappId", dappId)
-    }
-
-    handleSubdomain()
-
-    // TODO implement handling manual input of a source code location
-  </script>
+  <script type="module" src="./index.js"></script>
 </head>
 
 <body style="height: 100%; margin: 0">
-  <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+  <div id="dashboard"
+    style="display: none; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
     <h1>nohost</h1>
-    <form id="location-form">
+
+    <div style="width: 420px; font-weight: bold">Note: a normal user would never see this page.</div>
+    <div style="width: 420px; margin-top:20px">Normal users would click links from other places on the internet which
+      automatically
+      install a frontend from a source code location. e.g. by visiting <a id="location-example"
+        href="http://uniswap.abc.xyz">http://uniswap.abc.xyz</a>
+    </div>
+
+    <div style="width: 420px; margin-top: 20px">Power users can type in a custom source code location below. e.g.
+      ipns://app.spark.fi</div>
+
+    <form id="location-form" style="margin-top: 20px">
       <input type="text" id="location" placeholder="Source code location..."
-        style="border-radius: 32px; height: 44px; width: 560px; padding-left: 20px; font-size: 20px; border: 1px solid gray; font-weight:lighter">
+        style="border-radius: 32px; height: 44px; width: 420px; padding-left: 20px; font-size: 18px; border: 1px solid gray; font-weight:lighter">
     </form>
+    <p id="installation-url" style="width: 420px;"></p>
   </div>
+
+  <div id="installation-progress"
+    style="display: none; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+    <div style="width: 420px; font-weight: bold">Installing...</div>
+    <div style="width: 420px; margin-top:20px">This may take a few minutes.</div>
+  </div>
+
 </body>
 
 </html>

@@ -2,6 +2,7 @@ import { getHelia } from "./helia.js"
 import { ipns as createIpns } from "https://esm.sh/@helia/ipns@4.0.0"
 import { dnsOverHttps } from "https://esm.sh/@helia/ipns@4.0.0/dns-resolvers"
 import { dnsJsonOverHttps } from "https://esm.sh/@helia/ipns@4.0.0/dns-resolvers"
+import { extractCidV0, extractCidV1 } from "./extract-cid.js"
 
 const extractIpnsKey = (nameOrKey) => {
   const match = nameOrKey.match(/k[0-9a-z]{45,}/i)
@@ -27,6 +28,21 @@ const getIpns = async () => {
   ipns = createIpns(helia, {})
 
   return ipns
+}
+
+const resolveIpfsCid = async (key) => {
+  const result = await window
+    .fetch(`https://ipfs.io/ipns/${key}`, {
+      headers: { Accept: "application/vnd.ipfs.ipns-record" },
+    })
+    .then((res) => res.text())
+
+  let cid = extractCidV0(result)
+  if (cid) return cid
+
+  cid = extractCidV1(result)
+
+  return cid
 }
 
 const resolveIpns = async (keyOrName) => {

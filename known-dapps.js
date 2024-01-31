@@ -1,7 +1,7 @@
 export default [
   {
     id: "aave",
-    // "location": "ipns://app.aave.com", // you can install aave via ipns or github directly.
+    // location: "ipns://app.aave.com", // you can install aave via ipns or github directly.
     location: "github://aave/interface",
     options: {
       ignorePaths: ["^/governance", "^/_next/data/.*/governance"],
