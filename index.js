@@ -62,10 +62,12 @@ const handleSubdomain = async () => {
 
   console.log("dapp", dapp)
 
-  registration.active.postMessage({
-    event: "STORE_DAPP_REQUESTED",
-    payload: dapp,
-  })
+  if (dapp !== undefined) {
+    registration.active.postMessage({
+      event: "STORE_DAPP_REQUESTED",
+      payload: dapp,
+    })
+  }
 }
 
 handleSubdomain()
