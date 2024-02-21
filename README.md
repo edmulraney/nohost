@@ -54,7 +54,7 @@ nohost is a browser-based dapp installer. It leverages static assets and service
 - The installer stores the source code in indexedDB and creates a fake local cache entry for `https://vitalik.nohost.eth.limo` so that the user's browser will intercept requests to that subdomain and serve the source code from the local cache instead of the HTTP gateway
 - The installer redirects the user to the subdomain `https://vitalik.nohost.eth.limo` which is now served from the local cache
 
-#### Subdomain access technicaly flow
+#### Subdomain access technical flow
 - If the subdomain is already an installed dapp, `dapp-service-worker.js` will return it from the local cache, preventing a network request to the gateway
 - If the subdomain is not an installed dapp, `dapp-service-worker.js` will query the ENS registry for the subdomain name and download the source code from the location referenced in its ENS records
 - `index.html` sends an event to `dapp-service-worker.js` containing the source code
