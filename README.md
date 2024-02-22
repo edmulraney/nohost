@@ -56,7 +56,9 @@ nohost is a local-first browser-based dapp installer. It leverages static assets
 
 ### Subdomain access technical flow
 - If the subdomain is already an installed dapp, `dapp-service-worker.js` will return it from the local cache, preventing a network request to the gateway
-- If the subdomain is not an installed dapp, `dapp-service-worker.js` will query the ENS registry for the subdomain name and download the source code from the location referenced in its ENS records
+- If the subdomain is not an installed dapp:
+- `dapp-service-worker.js` will first check `known-dapps.js` to see if there's a matching known dapp for the subdomain name, and if so, will download the source code from the specified location in `known-dapps.js`
+- Otherwise, it will query the ENS registry for the subdomain name and download the source code from the location referenced in its ENS records
 - `index.html` sends an event to `dapp-service-worker.js` containing the source code
 - `dapp-service-worker.js` stores the source code in indexedDB, versions it, and creates a fake local cache entry for the subdomain
 - `index.html` redirects to the subdomain URL, which now returns the local cache entry
