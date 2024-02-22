@@ -1,18 +1,18 @@
 # nohost
 
 # Overview
-nohost is a browser-based dapp installer. It leverages static assets and service workers to enable trustless dapp installations directly onto users' devices via their web browser.
+nohost is a local-first browser-based dapp installer. It leverages static assets and service workers to enable trustless dapp installations directly onto users' devices.
 
 # Background
 - [Decentralizing DeFi frontends: protecting users and protocol authors](https://www.liquity.org/blog/decentralizing-defi-frontends-protecting-users-and-protocol-authors) by Edward Mulraney
 - [The State of Dapps on IPFS: Trust vs. Verification](https://blog.ipfs.tech/dapps-ipfs/) by Daniel Norman
-- [End-to-end app integrity verification using browser extension manifest v3](https://github.com/edmulraney/app-integrity-verifier-extension)
+- [End-to-end app integrity verification using browser extension manifest v3](https://github.com/edmulraney/app-integrity-verifier-extension) by Edward Mulraney
 
-# Key Features
-- Fully browser-based: Utilizes static files (HTML, CSS, JS) and a service worker
+# Key features
+- Browser native: utilizes static files (HTML, CSS, JS) and a service worker - doesn't require third party applications such as IPFS Desktop
 - Facilitates trustless dapp installations from decentralized storage networks like IPFS, or trusted web2 sources like Github
 - Utilizes HTTP gateways for initial delivery of the installer, then shifts to local delivery for subsequent access
-- Enables dapp installations by visiting URLs
+- Utilizes a subdomain URL convention for installing dapps
 
 # Contents
 
@@ -63,6 +63,9 @@ nohost is a browser-based dapp installer. It leverages static assets and service
 
 # Ethos
 Delegating *work* to web2 services is acceptable, but delegating *trust* should be avoided
+
+# Development
+`npm start` - Starts a development server locally on http://localhost:9105
 
 # Get involved
 This repo is currently highly experimental, hence it's not yet typed, tested, or architected. This project will become a community-driven public good, owned by a neutral non-profit entity.
